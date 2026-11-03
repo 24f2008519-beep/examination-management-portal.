@@ -1,31 +1,72 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> 
-    <title>Login</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <h1>Login</h1>
+{% block title %}Login | EMP{% endblock %}
 
-    <form method="POST">
+{% block content %}
 
-        <label>Username:</label>
-        <input type="text" name="username">
+<div class="row justify-content-center align-items-center">
+    <div class="col-md-5 col-lg-4">
 
-        <br><br>
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-body p-4">
 
-        <label>Password:</label>
-        <input type="password" name="password">
+                <h2 class="text-center mb-2">Welcome Back</h2>
+                <p class="text-center text-muted mb-4">
+                    Sign in to your account
+                </p>
 
-        <br><br>
+                <form method="POST" action="{{ url_for('main.login') }}">
 
-        <button type="submit">Login</button>
-        
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            required
+                        >
+                    </div>
 
-    </form>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+                    </div>
 
-    <p><a href="/register.html">Not Registered?</a></p>
+                    <button type="submit" class="btn btn-dark w-100 mt-2">
+                        Login
+                    </button>
 
-</body>
-</html>
+                </form>
+
+                <hr class="my-4">
+
+                <p class="text-center mb-2">
+                    Don't have an account?
+                </p>
+
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ url_for('main.register') }}">
+                        Student Registration
+                    </a>
+
+                    <a href="{{ url_for('main.examiner_register') }}">
+                        Examiner Registration
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

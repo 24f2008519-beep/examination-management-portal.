@@ -87,7 +87,7 @@ def register():
         db.session.commit()
 
         
-        return redirect(url_for("main.login")) 
+        return redirect(url_for("main.home")) 
     return render_template("auth/register.html")
 
 

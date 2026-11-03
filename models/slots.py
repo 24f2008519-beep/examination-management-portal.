@@ -17,7 +17,7 @@ class Slot(db.Model):
               nullable = False)
     examiner_id = db.Column(
                   db.Integer, 
-                  db.ForeignKey("exam_profile.id"), 
+                  db.ForeignKey("examiner.id"), 
                   nullable = False)
     
     #Exam slot booking time
@@ -28,7 +28,7 @@ class Slot(db.Model):
 
     #Student Seat Availablity
     Available_Seats = db.Column(
-                      db.Integer, 
+                      db.Integer,
                       nullable=False)
     
 

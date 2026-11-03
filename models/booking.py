@@ -20,7 +20,10 @@ class Booking(db.Model):
                  db.Integer, 
                  db.ForeignKey("user.id"), 
                  nullable=False)
-    
+    booking_date = db.Column(
+              db.DateTime,
+              default = datetime.now,
+              nullable=False)
     #Booking status
 
     Status = db.Column(
@@ -32,8 +35,7 @@ class Booking(db.Model):
     __table_args__ = (
         db.UniqueConstraint(
             'exam_id',
-            'slot_id',
             'Student_id',
-            name='unique_booking'),)
+            name='unique_student_exam_booking'),)
         
     
