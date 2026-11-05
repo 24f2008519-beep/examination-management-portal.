@@ -1,5 +1,7 @@
 import email
+from datetime import datetime
 from flask import Blueprint, render_template, request, session, redirect, url_for
+from app.models import User, Examination, Slot, Course, Booking
 from app.models import User
 from app import db
 main = Blueprint('main', __name__)
@@ -38,7 +40,10 @@ def login():
 
         #3. If the user exists and is active, store the user ID in the session and redirect to the profile page
         session["user_id"] = user.id
-        return redirect(url_for("main.profile"))
+        if user.role == "student":
+            return redirect(url_for("main.student_dashboard"))
+        if user.role == "examiner":
+            return redirect(url_for("main.examiner_dashboard"))
     return render_template("auth/login.html")
 
 
@@ -70,10 +75,12 @@ def register():
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
+        role = request.form.get("role")
 
         existing_user = User.query.filter(
             (User.username == username) |
             (User.email == email)
+            (User.role == role)
         ).first()
 
         if existing_user:
@@ -83,9 +90,13 @@ def register():
         new_user = User(username = username, 
                         email = email, password = password, 
                         role = 'student')
+        
+        
+        new_user = User(username = username, 
+                        email = email, password = password, 
+                        role = 'examiner')
         db.session.add(new_user)
         db.session.commit()
-
         
         return redirect(url_for("main.home")) 
     return render_template("auth/register.html")
@@ -142,6 +153,58 @@ def admin_dashboard():
                                              is_active=False).all()
 
     return render_template("auth/admin_dashboard.html", user=user)
+
+@main.route("/student/dashboard")
+def student_dashboard():
+    user_id = session.get("user_id")
+    print("Session user ID:", user_id)
+    if user_id is None:
+        return redirect(url_for("main.login"))
+    user = User.query.get(user_id)
+    print("User:", user)
+    print("User role:", user.role if user else None)
+
+
+
+    if user is None or user.role != "student":
+        return "Access denied",403
+
+    if not user.is_active :
+        return "Your account is inactive",403
+
+    now = datetime.now()
+
+    available_slots = (db.session.query(Examination)
+                                .join(Slot, Slot.exam_id == Examination.id)
+                                .filter(
+                                     Slot.is_active == True,
+                                     Slot.Available_Seats > 0,
+                                     Slot.start_time >= now 
+
+                                )
+                                .distinct()
+                                .all()
+                                )
+    upcoming_exams = (db.session.query(Slot,Booking,Examination)
+                                .join(Examination, Booking.exam_id
+                                      == Examination.id)
+                                .join(Slot,Booking.slot_id == Slot.id)
+                                .filter(
+                                     Booking.Student_id == user.id,
+                                     Booking.Status == "Booked",
+                                     Slot.start_time > now
+                                )
+                                .distinct()
+                                .all()
+                                )
+    return render_template(
+    "auth/student_dashboard.html",
+    user=user,
+    available_slots=available_slots,
+    upcoming_exams=upcoming_exams
+)
+    
+
 
     
     

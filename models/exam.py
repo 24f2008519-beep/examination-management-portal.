@@ -15,11 +15,6 @@ class Examination(db.Model):
     Type = db.Column(db.String(30), nullable=False)
     duration_minutes = db.Column(db.Integer, nullable=False)
     Max_Marks = db.Column(db.Float, nullable=False)
-    user_id = db.Column(
-              db.Integer, 
-              db.ForeignKey("user.id"), 
-              unique = True,
-              nullable=False)
     #Relation with course
     course_id = db.Column(
         db.Integer, 

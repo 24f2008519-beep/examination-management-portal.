@@ -1,15 +1,157 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <meta charset="UTF-8">
-    <title>My Profile</title>
-</head>
-<body>
-    <h1>My Profile</h1>
-    <p>Welcome to your profile page.</p>
+{% extends "base.html" %}
 
-    <button type="submit" class="btn btn-primary" href='{{ url_for('main.admin_dashboard') }}'>admin_dashboard</button><br>
-</body>
-</html>
+{% block title %}Student Dashboard | EMP{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Dashboard heading -->
+    <div class="mb-4">
+        <h2>Student Dashboard</h2>
+        <p class="text-muted">
+            Welcome, {{ user.username }}.
+            Manage your examinations and bookings here.
+        </p>
+    </div>
+
+    <!-- Dashboard statistics -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Available Examinations</h6>
+                    <h2>{{ available_exam_count }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Upcoming Examinations</h6>
+                    <h2>{{ upcoming_bookings|length }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Available Slots</h6>
+                    <h2>{{ available_slots|length }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Available examinations -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+
+            <h5 class="mb-3">Available Examination Slots</h5>
+
+            {% if available_slots %}
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Examination</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Available Seats</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for slot, exam in available_slots %}
+                        <tr>
+                            <td>{{ exam.name }}</td>
+                            <td>{{ slot.start_time.strftime('%d-%m-%Y %I:%M %p') }}</td>
+                            <td>{{ slot.end_time.strftime('%I:%M %p') }}</td>
+                            <td>
+                                <span class="badge bg-success">
+                                    {{ slot.Available_Seats }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+            {% else %}
+                <p class="text-muted mb-0">
+                    No examination slots are currently available.
+                </p>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- Upcoming bookings -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+
+            <h5 class="mb-3">My Upcoming Examinations</h5>
+
+            {% if upcoming_bookings %}
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Examination</th>
+                            <th>Exam Date</th>
+                            <th>Start Time</th>
+                            <th>Booking Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for booking, slot, exam in upcoming_bookings %}
+                        <tr>
+                            <td>{{ exam.name }}</td>
+                            <td>{{ slot.start_time.strftime('%d-%m-%Y') }}</td>
+                            <td>{{ slot.start_time.strftime('%I:%M %p') }}</td>
+                            <td>
+                                <span class="badge bg-success">
+                                    {{ booking.Status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+            {% else %}
+                <p class="text-muted mb-0">
+                    You haven't booked any upcoming examinations.
+                </p>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5>Published Results</h5>
+            <p class="text-muted mb-0">
+                Published examination results will appear here.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

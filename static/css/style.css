@@ -12,3 +12,49 @@
     border-radius: 7px;
     font-weight: 500;
 }
+
+
+.role-switch {
+    position: relative;
+    display: flex;
+    width: 260px;
+    padding: 5px;
+    background: #e9ecef;
+    border-radius: 30px;
+}
+
+.role-switch input {
+    display: none;
+}
+
+.role-switch label {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    z-index: 2;
+    cursor: pointer;
+    color: #333;
+    margin: 0;
+}
+
+.switch-slider {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: calc(50% - 5px);
+    height: calc(100% - 10px);
+    background: #0d6efd;
+    border-radius: 25px;
+    transition: transform 0.25s ease;
+}
+
+#examiner:checked ~ .switch-slider {
+    transform: translateX(100%);
+}
+
+#student:checked ~ label[for="student"],
+#examiner:checked ~ label[for="examiner"] {
+    color: white;
+}
+
+
