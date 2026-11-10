@@ -20,5 +20,5 @@ def create_app():
 
     from app.routes.main import main
     app.register_blueprint(main)
-
+    print(app.url_map)
     return app
