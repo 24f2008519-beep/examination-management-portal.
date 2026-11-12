@@ -165,12 +165,12 @@ def student_login_Successfull():
 
 @main.route("/admin", methods=['GET',  'POST'])
 def admin_dashboard(): 
-    #1. Retrieve the user ID from the session
+    
     user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("main.login"))
 
-    #2. Query the database for the user with the retrieved user ID
+
     user = User.query.get(user_id)
 
     admin = User.query.filter_by(role="admin").first()
@@ -187,24 +187,26 @@ def admin_dashboard():
 
 
 
-    #3. Check's if the user is an admin
     if not user or user.role != "admin":
         return "Access denied. You are not authorized to access this page.", 403
     
 
-    #4. pending_examiners checkbox.
+    
 
     pending_examiners = User.query.filter_by(
         role="examiner",
         is_active=False
      ).all()
 
-   
+
+    courses = Course.query.all()    
+    
 
     return render_template(
     "auth/admin_dashboard.html",
         user=user,
-        pending_examiners=pending_examiners
+        pending_examiners=pending_examiners,
+        courses=courses
     )
 
 @main.route("/student/dashboard")
@@ -293,13 +295,4 @@ def approve_examiner(examiner_id):
     db.session.commit()
 
     return redirect(url_for("main.admin_dashboard"))
-    
-    
 
-
-    
-    
-
-    
-
-            

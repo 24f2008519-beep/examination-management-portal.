@@ -13,4 +13,4 @@ class evalution(db.Model):
     evalutuated_at = db.Column(db.DateTime,
                                default = datetime.now,
                                nullable=False)
-    published_at = remark = db.Column(db.String(120), nullable=True)
+    published_at = db.Column(db.String(120), nullable=True)

@@ -48,13 +48,5 @@
     transition: transform 0.25s ease;
 }
 
-#examiner:checked ~ .switch-slider {
-    transform: translateX(100%);
-}
-
-#student:checked ~ label[for="student"],
-#examiner:checked ~ label[for="examiner"] {
-    color: white;
-}
 
 
